@@ -21,6 +21,11 @@ type ReportRequester struct {
 	adnetwork.Request
 
 	reportURL string
+	rawData   ReportResponse
+}
+
+type ReportResponse struct {
+	Data [][]string
 }
 
 func (rr *ReportRequester) Initialize() error {
@@ -56,7 +61,7 @@ func (rr ReportRequester) Fetch() ([]myrevenue.Model, error) {
 	return rr.parse(resp.Body)
 }
 
-func (rr ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error) {
+func (rr *ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error) {
 	content := csv.NewReader(reader)
 	records, err := content.ReadAll()
 
@@ -66,6 +71,10 @@ func (rr ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error)
 	}
 
 	defer reader.Close()
+
+	rr.rawData = ReportResponse{
+		Data: records,
+	}
 	return rr.convertCSVToModel(records)
 }
 
@@ -162,4 +171,8 @@ func (rr ReportRequester) convertCSVToModel(csv [][]string) ([]myrevenue.Model, 
 
 func (ReportRequester) GetName() string {
 	return "MoPub"
+}
+
+func (rr ReportRequester) GetReport() ReportResponse {
+	return rr.rawData
 }

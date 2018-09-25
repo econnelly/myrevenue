@@ -20,9 +20,10 @@ type ReportRequester struct {
 	adnetwork.Request
 
 	reportURL string
+	rawData   ReportResponse
 }
 
-type Response struct {
+type ReportResponse struct {
 	Rows []struct {
 		DateTime     string  `json:"dateTime"`
 		AppName      string  `json:"app|name"`
@@ -76,7 +77,7 @@ func (rr *ReportRequester) Fetch() ([]myrevenue.Model, error) {
 }
 
 func (rr ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error) {
-	result := Response{}
+	result := ReportResponse{}
 
 	body, err := ioutil.ReadAll(reader)
 	if err != nil {
@@ -87,6 +88,7 @@ func (rr ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error)
 	if e != nil {
 		return nil, e
 	}
+	rr.rawData = result
 	return rr.convertToReportModel(result), nil
 }
 
@@ -95,7 +97,7 @@ func (rr ReportRequester) Error(reader io.ReadCloser, err error) {
 	log.Printf("%v: %v", rr.GetName(), err)
 }
 
-func (rr ReportRequester) convertToReportModel(result Response) []myrevenue.Model {
+func (rr ReportRequester) convertToReportModel(result ReportResponse) []myrevenue.Model {
 	reports := make([]myrevenue.Model, len(result.Rows))
 	for i, row := range result.Rows {
 		reports[i].NetworkName = rr.GetName()
@@ -113,4 +115,12 @@ func (rr ReportRequester) convertToReportModel(result Response) []myrevenue.Mode
 	}
 
 	return reports
+}
+
+func (ReportRequester) GetName() string {
+	return "Flurry"
+}
+
+func (rr ReportRequester) GetReport() ReportResponse {
+	return rr.rawData
 }
