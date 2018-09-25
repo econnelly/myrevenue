@@ -19,10 +19,10 @@ import (
 )
 
 type ReportRequester struct {
-	PublisherID  string // pub-5515725629522929
+	PublisherID  string
 	ClientID     string
 	ClientSecret string
-	RefreshToken string // 1/jaK_-0jJAxeQHZpuCEhd7Oxa97fhRSOT7BCHVt26Spk
+	RefreshToken string
 	StartDate    time.Time
 	EndDate      time.Time
 	adnetwork.Request
