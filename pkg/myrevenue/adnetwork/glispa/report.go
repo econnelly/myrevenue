@@ -30,6 +30,7 @@ type ReportRequester struct {
 
 	authToken string
 	reportURL string
+	rawData   ReportResponse
 }
 
 type ReportResponse struct {
@@ -164,7 +165,7 @@ func (rr *ReportRequester) Fetch() ([]myrevenue.Model, error) {
 	return rr.parse(resp.Body)
 }
 
-func (rr ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error) {
+func (rr *ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error) {
 	result := ReportResponse{}
 
 	body, err := ioutil.ReadAll(reader)
@@ -177,6 +178,7 @@ func (rr ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error)
 		return nil, e
 	}
 
+	rr.rawData = result
 	return rr.convertToReportModel(result)
 }
 
@@ -303,4 +305,8 @@ func (rr ReportRequester) hasRefreshToken() bool {
 
 func (rr ReportRequester) GetName() string {
 	return "Glispa"
+}
+
+func (rr ReportRequester) GetReport() ReportResponse {
+	return rr.rawData
 }

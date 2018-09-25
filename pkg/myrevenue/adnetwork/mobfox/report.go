@@ -20,6 +20,7 @@ type ReportRequester struct {
 	adnetwork.Request
 
 	reportURL string
+	rawData   ReportResponse
 }
 
 type ReportResponse struct {
@@ -71,7 +72,7 @@ func (rr *ReportRequester) Fetch() ([]myrevenue.Model, error) {
 	return rr.parse(resp.Body)
 }
 
-func (rr ReportRequester) parse(r io.ReadCloser) ([]myrevenue.Model, error) {
+func (rr *ReportRequester) parse(r io.ReadCloser) ([]myrevenue.Model, error) {
 	result := ReportResponse{}
 
 	body, err := ioutil.ReadAll(r)
@@ -84,6 +85,7 @@ func (rr ReportRequester) parse(r io.ReadCloser) ([]myrevenue.Model, error) {
 		return nil, e
 	}
 
+	rr.rawData = result
 	return rr.convertModel(result)
 }
 
@@ -116,4 +118,8 @@ func (rr ReportRequester) convertModel(m ReportResponse) ([]myrevenue.Model, err
 
 func (ReportRequester) GetName() string {
 	return "MobFox"
+}
+
+func (rr ReportRequester) GetReport() ReportResponse {
+	return rr.rawData
 }

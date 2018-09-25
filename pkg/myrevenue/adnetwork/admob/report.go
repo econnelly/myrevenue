@@ -29,6 +29,8 @@ type ReportRequester struct {
 
 	authToken string
 	reportURL string
+
+	rawData ReportResponse
 }
 
 type TokenResponse struct {
@@ -256,4 +258,8 @@ func (rr ReportRequester) unmarshalAuth(r io.ReadCloser) (TokenResponse, TokenEr
 
 func (rr ReportRequester) GetName() string {
 	return "AdMob"
+}
+
+func (rr ReportRequester) GetReport() ReportResponse {
+	return rr.rawData
 }
