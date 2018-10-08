@@ -258,6 +258,6 @@ func (rr ReportRequester) GetName() string {
 	return "AdMob"
 }
 
-func (rr ReportRequester) GetReport() ReportResponse {
+func (rr ReportRequester) GetReport() interface{} {
 	return rr.rawData
 }

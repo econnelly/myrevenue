@@ -120,6 +120,6 @@ func (ReportRequester) GetName() string {
 	return "MobFox"
 }
 
-func (rr ReportRequester) GetReport() ReportResponse {
+func (rr ReportRequester) GetReport() interface{} {
 	return rr.rawData
 }

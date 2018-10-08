@@ -307,6 +307,6 @@ func (rr ReportRequester) GetName() string {
 	return "Glispa"
 }
 
-func (rr ReportRequester) GetReport() ReportResponse {
+func (rr ReportRequester) GetReport() interface{} {
 	return rr.rawData
 }

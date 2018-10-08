@@ -57,7 +57,7 @@ func main() {
 		return
 	}
 
-	log.Println(config)
+	InitNetworks(config)
 }
 
 func PopulateConfig(configFile string) (*Config, error) {

@@ -173,6 +173,6 @@ func (ReportRequester) GetName() string {
 	return "MoPub"
 }
 
-func (rr ReportRequester) GetReport() ReportResponse {
+func (rr ReportRequester) GetReport() interface{} {
 	return rr.rawData
 }

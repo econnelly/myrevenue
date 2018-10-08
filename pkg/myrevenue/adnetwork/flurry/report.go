@@ -121,6 +121,6 @@ func (ReportRequester) GetName() string {
 	return "Flurry"
 }
 
-func (rr ReportRequester) GetReport() ReportResponse {
+func (rr ReportRequester) GetReport() interface{} {
 	return rr.rawData
 }
