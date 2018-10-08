@@ -57,7 +57,16 @@ func main() {
 		return
 	}
 
-	InitNetworks(config)
+	start, end, requests := InitNetworks(config)
+	ch := make(chan string)
+	log.Printf("From: %s\nTo: %s", start, end)
+	for _, req := range requests {
+		go MakeRequest(req, ch)
+	}
+
+	for range requests {
+		log.Println(<-ch)
+	}
 }
 
 func PopulateConfig(configFile string) (*Config, error) {
@@ -87,7 +96,7 @@ func InitNetworks(config *Config) (time.Time, time.Time, []adnetwork.Request) {
 			StartDate: startDate,
 			EndDate:   endDate,
 		}
-		networks = append(networks, mopubRequester)
+		networks = append(networks, &mopubRequester)
 	}
 
 	if config.Network.Mobfox.APIKey != "" {
@@ -97,7 +106,7 @@ func InitNetworks(config *Config) (time.Time, time.Time, []adnetwork.Request) {
 			StartDate: startDate,
 			EndDate:   endDate,
 		}
-		networks = append(networks, mobfoxRequester)
+		networks = append(networks, &mobfoxRequester)
 	}
 
 	if config.Network.Flurry.APIKey != "" {
@@ -107,7 +116,7 @@ func InitNetworks(config *Config) (time.Time, time.Time, []adnetwork.Request) {
 			StartDate: startDate,
 			EndDate:   endDate,
 		}
-		networks = append(networks, flurryRequester)
+		networks = append(networks, &flurryRequester)
 	}
 
 	if config.Network.Glispa.PublisherID != "" {
@@ -121,7 +130,7 @@ func InitNetworks(config *Config) (time.Time, time.Time, []adnetwork.Request) {
 			StartDate:    startDate,
 			EndDate:      endDate,
 		}
-		networks = append(networks, glispaRequester)
+		networks = append(networks, &glispaRequester)
 	}
 
 	if config.Network.Admob.PublisherID != "" {
@@ -133,7 +142,7 @@ func InitNetworks(config *Config) (time.Time, time.Time, []adnetwork.Request) {
 			StartDate:    startDate,
 			EndDate:      endDate,
 		}
-		networks = append(networks, admobRequester)
+		networks = append(networks, &admobRequester)
 	}
 
 	return startDate, endDate, networks
