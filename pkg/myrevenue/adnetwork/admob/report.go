@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/econnelly/myrevenue/pkg/myrevenue"
+	"github.com/econnelly/myrevenue/pkg/myrevenue/adnetwork"
 	"io"
 	"io/ioutil"
 	"log"
@@ -12,10 +14,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-)
-import (
-	".."
-	"../.."
 )
 
 type ReportRequester struct {

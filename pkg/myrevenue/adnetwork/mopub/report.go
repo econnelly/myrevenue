@@ -1,11 +1,11 @@
 package mopub
 
 import (
-	".."
-	"../.."
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"github.com/econnelly/myrevenue/pkg/myrevenue"
+	"github.com/econnelly/myrevenue/pkg/myrevenue/adnetwork"
 	"io"
 	"log"
 	"net/url"

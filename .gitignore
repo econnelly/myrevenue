@@ -16,3 +16,6 @@
 # IntelliJ
 .idea
 *.iml
+
+# Project config
+config.json
