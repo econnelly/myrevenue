@@ -57,9 +57,8 @@ func main() {
 		return
 	}
 
-	start, end, requests := InitNetworks(config)
+	requests := InitNetworks(config)
 	ch := make(chan string)
-	log.Printf("From: %s\nTo: %s", start, end)
 	for _, req := range requests {
 		go MakeRequest(req, ch)
 	}
@@ -81,7 +80,7 @@ func PopulateConfig(configFile string) (*Config, error) {
 	return config, err
 }
 
-func InitNetworks(config *Config) (time.Time, time.Time, []adnetwork.Request) {
+func InitNetworks(config *Config) []adnetwork.Request {
 	startDate, endDate, err := datesFromHistory(config.History)
 
 	if err != nil {
