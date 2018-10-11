@@ -1,11 +1,10 @@
 package admob
 
 import (
-	"../../src/myrevenue"
-	"./.."
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/econnelly/myrevenue/adnetwork"
 	"io"
 	"io/ioutil"
 	"log"

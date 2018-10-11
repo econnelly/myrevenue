@@ -1,10 +1,10 @@
 package mobfox
 
 import (
-	"../../src/myrevenue"
-	"./.."
 	"encoding/json"
 	"fmt"
+	"github.com/econnelly/myrevenue"
+	"github.com/econnelly/myrevenue/adnetwork"
 	"io"
 	"io/ioutil"
 	"log"
