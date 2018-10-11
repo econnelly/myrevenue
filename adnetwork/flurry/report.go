@@ -1,10 +1,10 @@
 package flurry
 
 import (
+	"../../src/myrevenue"
+	"./.."
 	"encoding/json"
 	"fmt"
-	"github.com/econnelly/myrevenue/pkg/myrevenue"
-	"github.com/econnelly/myrevenue/pkg/myrevenue/adnetwork"
 	"io"
 	"io/ioutil"
 	"log"
@@ -61,6 +61,8 @@ func (rr *ReportRequester) Initialize() error {
 
 	rr.reportURL = fmt.Sprintf("%v?%v", reportURL.String(), query.Encode())
 
+	log.Println(rr.reportURL)
+
 	return nil
 }
 
@@ -106,11 +108,11 @@ func (rr ReportRequester) convertToReportModel(result ReportResponse) []myrevenu
 		reports[i].Requests = uint64(row.AdsRequested)
 		reports[i].CTR = row.Ctr
 
-		day, err := time.Parse("2006-01-02 15:04:05.000-07:00", row.DateTime)
+		day, err := time.Parse("2006-01-02 15:04:05", row.DateTime)
 		if err != nil {
 			log.Println(err)
 		} else {
-			reports[i].DateTime = day.AddDate(0, 0, 1).Format("2006-01-02 15:04:05.999999")
+			reports[i].DateTime = day.Format("2006-01-02 15:04:05.999999")
 		}
 	}
 

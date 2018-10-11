@@ -1,6 +1,6 @@
 package adnetwork
 
-import "github.com/econnelly/myrevenue/pkg/myrevenue"
+import "../src/myrevenue"
 
 type Request interface {
 	Initialize() error
