@@ -18,4 +18,4 @@ mopubRequest.Initialize()
 revenue, err := mopubRequest.Fetch()
 ```
 
-Since this library attempts to standardize responses, it is limited by the lowest common denominator. Any network-specific information can still be accessed, but the standard report is limited.
+Since this library attempts to standardize responses, it can only return a small subset of commonly available data. Any network-specific information can still be accessed, but the standard report is limited.
