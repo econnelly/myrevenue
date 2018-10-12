@@ -18,6 +18,7 @@ type Model struct {
 	Clicks      uint64  `json:"clicks"`
 	CTR         float64 `json:"ctr"`
 	Revenue     float64 `json:"revenue"`
+	ECPM        float64 `json:"ecpm"`
 }
 
 func Request(reportURL string, headers map[string]string, debug bool) (*http.Response, error) {

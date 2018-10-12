@@ -53,7 +53,7 @@ func (rr *ReportRequester) Initialize() error {
 	values.Add("tz", rr.TimeZone)
 	values.Add("group", "sub_id,inventory_id,country_code")
 	values.Add("timegroup", "day")
-	values.Add("totals", "total_impressions,total_served,total_requests,total_clicks,total_earnings")
+	values.Add("totals", "total_impressions,total_served,total_requests,total_clicks,total_earnings,ecpm")
 
 	rr.reportURL = fmt.Sprintf("%v?%v", requestUrl.String(), values.Encode())
 
@@ -110,6 +110,7 @@ func (rr ReportRequester) convertModel(m ReportResponse) ([]myrevenue.Model, err
 		clicks := r[headerMap["total_clicks"]].(float64)
 		imp := r[headerMap["total_impressions"]].(float64)
 		reportModels[j].CTR = clicks / imp
+		reportModels[j].ECPM = r[headerMap["ecpm"]].(float64)
 	}
 
 	return reportModels, nil
