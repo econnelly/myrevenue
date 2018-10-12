@@ -124,14 +124,9 @@ func (rr *ReportRequester) Initialize() error {
 		}
 	}
 
-	startDate := rr.StartDate.Format("2006-01-02 15:04:05.999999")
-	endDate := rr.EndDate.Format("2006-01-02 15:04:05.999999")
+	startDate := rr.StartDate.UTC().Format("2006-01-02 15:04:05.999999")
+	endDate := rr.EndDate.UTC().Format("2006-01-02 15:04:05.999999")
 
-	//date = time.Now().AddDate(0, 0, 0)
-	//today := date.UTC().Format(time.RFC3339)
-
-	//reportURL := "https://reporting.glispaconnect.com/v1.1/publishers/%v?access_token=%v&timestamp[from]=%v&timestamp[to]=%v&granularity=day"
-	//reportURL = fmt.Sprintf(reportURL, rr.PublisherKey, accessToken, yesterday, yesterday)
 	reportUrl := url.URL{
 		Scheme: "https",
 		Host:   "reporting.glispaconnect.com",
