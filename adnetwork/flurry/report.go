@@ -36,11 +36,18 @@ type ReportResponse struct {
 }
 
 func (rr *ReportRequester) Initialize() error {
-	startDate := rr.StartDate.Format("2006-01-02")
-	endDate := rr.EndDate.Format("2006-01-02")
 
-	if startDate == endDate {
-		startDate = rr.StartDate.AddDate(0, 0, -1).Format("2006-01-02")
+	var startDate string
+	var endDate string
+
+	if rr.StartDate.Year() == rr.EndDate.Year() && rr.StartDate.Month() == rr.EndDate.Month() && rr.StartDate.Day() == rr.EndDate.Day() {
+		startDate = rr.StartDate.Format("2006-01-02")
+		endDate = rr.EndDate.AddDate(0, 0, 1).Format("2006-01-02")
+	} else if rr.EndDate.Before(rr.StartDate) {
+		return fmt.Errorf("start date (%x) is after end date (%x)", rr.StartDate, rr.EndDate)
+	} else {
+		startDate = rr.StartDate.Format("2006-01-02")
+		endDate = rr.EndDate.Format("2006-01-02")
 	}
 
 	reportURL := url.URL{
