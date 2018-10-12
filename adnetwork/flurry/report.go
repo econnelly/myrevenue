@@ -68,8 +68,6 @@ func (rr *ReportRequester) Initialize() error {
 
 	rr.reportURL = fmt.Sprintf("%v?%v", reportURL.String(), query.Encode())
 
-	log.Println(rr.reportURL)
-
 	return nil
 }
 
