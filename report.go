@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httputil"
+	"strings"
 )
 
 type Model struct {
@@ -21,15 +22,28 @@ type Model struct {
 	ECPM        float64 `json:"ecpm"`
 }
 
-func Request(reportURL string, headers map[string]string, debug bool) (*http.Response, error) {
+func GetRequest(reportURL string, headers map[string]string, debug bool) (*http.Response, error) {
 
 	// Build the request
 	req, err := http.NewRequest(http.MethodGet, reportURL, nil)
 	if err != nil {
-		log.Fatal("NewRequest: ", err)
 		return nil, err
 	}
 
+	return request(req, headers, debug)
+
+}
+
+func PostRequest(reportURL string, headers map[string]string, data string, debug bool) (*http.Response, error) {
+	req, err := http.NewRequest(http.MethodPost, reportURL, strings.NewReader(data))
+	if err != nil {
+		return nil, err
+	}
+
+	return request(req, headers, debug)
+}
+
+func request(req *http.Request, headers map[string]string, debug bool) (*http.Response, error) {
 	if headers != nil {
 		for h := range headers {
 			req.Header.Set(h, headers[h])

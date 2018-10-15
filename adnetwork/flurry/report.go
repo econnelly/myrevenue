@@ -72,7 +72,7 @@ func (rr *ReportRequester) Initialize() error {
 }
 
 func (rr *ReportRequester) Fetch() ([]myrevenue.Model, error) {
-	resp, err := myrevenue.Request(rr.reportURL, nil, false)
+	resp, err := myrevenue.GetRequest(rr.reportURL, nil, false)
 
 	if err != nil {
 		log.Println(err)

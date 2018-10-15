@@ -118,7 +118,7 @@ func (rr *ReportRequester) Fetch() ([]myrevenue.Model, error) {
 		"Accept":        "application/json; charset=utf-8",
 		"Authorization": fmt.Sprintf("Bearer %v", rr.authToken),
 	}
-	resp, err := myrevenue.Request(rr.reportURL, headers, false)
+	resp, err := myrevenue.GetRequest(rr.reportURL, headers, false)
 
 	if err != nil {
 		log.Println(err)
