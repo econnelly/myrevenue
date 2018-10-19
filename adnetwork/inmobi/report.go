@@ -204,6 +204,12 @@ func (rr ReportRequester) convertToReportModel(response ReportResponse) ([]myrev
 		reportModels[i].Impressions = item.AdImpressions
 		reportModels[i].Revenue = item.Earnings
 		reportModels[i].Requests = item.AdRequests
+		day, parseError := time.Parse("2006-01-02 15:04:05", item.Date)
+		if parseError != nil {
+			return nil, parseError
+		}
+
+		reportModels[i].DateTime = day
 	}
 
 	return reportModels, nil

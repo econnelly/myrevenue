@@ -101,7 +101,7 @@ func (rr ReportRequester) convertCSVToModel(csv [][]string) ([]myrevenue.Model, 
 			if err != nil {
 				log.Println(err)
 			} else {
-				model.DateTime = day.Format("2006-01-02 15:04:05.999999")
+				model.DateTime = day
 			}
 
 			ctrStr := csv[i][headerMap["CTR"]]

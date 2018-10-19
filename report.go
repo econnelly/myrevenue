@@ -6,20 +6,21 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"strings"
+	"time"
 )
 
 type Model struct {
-	NetworkName string  `json:"network_id"`
-	DateTime    string  `json:"date_time"` // ISO 8601
-	Name        string  `json:"name"`
-	Country     string  `json:"country"` // 2-letter country code
-	App         string  `json:"app"`
-	Requests    uint64  `json:"requests"`
-	Impressions uint64  `json:"impressions"`
-	Clicks      uint64  `json:"clicks"`
-	CTR         float64 `json:"ctr"`
-	Revenue     float64 `json:"revenue"`
-	ECPM        float64 `json:"ecpm"`
+	NetworkName string    `json:"network_id"`
+	DateTime    time.Time `json:"date_time"` // ISO 8601
+	Name        string    `json:"name"`
+	Country     string    `json:"country"` // 2-letter country code
+	App         string    `json:"app"`
+	Requests    uint64    `json:"requests"`
+	Impressions uint64    `json:"impressions"`
+	Clicks      uint64    `json:"clicks"`
+	CTR         float64   `json:"ctr"`
+	Revenue     float64   `json:"revenue"`
+	ECPM        float64   `json:"ecpm"`
 }
 
 func GetRequest(reportURL string, headers map[string]string, debug bool) (*http.Response, error) {

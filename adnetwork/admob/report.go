@@ -183,7 +183,7 @@ func (rr ReportRequester) convertToReportModel(r ReportResponse) ([]myrevenue.Mo
 		if err != nil {
 			log.Println(err.Error())
 		} else {
-			reportModels[i].DateTime = day.Format("2006-01-02 15:04:05.999999")
+			reportModels[i].DateTime = day
 		}
 	}
 

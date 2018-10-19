@@ -102,7 +102,7 @@ func (rr ReportRequester) convertModel(m ReportResponse) ([]myrevenue.Model, err
 		if err != nil {
 			log.Println(err)
 		} else {
-			reportModels[j].DateTime = day.Format("2006-01-02 15:04:05.999999")
+			reportModels[j].DateTime = day
 		}
 		reportModels[j].Impressions = uint64(r[headerMap["total_impressions"]].(float64))
 		reportModels[j].Revenue = r[headerMap["total_earnings"]].(float64)

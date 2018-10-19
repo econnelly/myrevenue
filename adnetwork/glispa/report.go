@@ -284,7 +284,7 @@ func (rr ReportRequester) convertToReportModel(response ReportResponse) ([]myrev
 		reportModels[i].Impressions = uint64(d.Result.Impressions)
 		reportModels[i].Requests = uint64(d.Result.AdRequests)
 		reportModels[i].CTR = d.Result.Ctr
-		reportModels[i].DateTime = d.Timestamp.Format("2006-01-02 15:04:05.999999")
+		reportModels[i].DateTime = d.Timestamp
 	}
 
 	return reportModels, nil
