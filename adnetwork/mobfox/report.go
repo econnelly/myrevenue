@@ -124,3 +124,11 @@ func (ReportRequester) GetName() string {
 func (rr ReportRequester) GetReport() interface{} {
 	return rr.rawData
 }
+
+func (rr ReportRequester) GetStartDate() time.Time {
+	return rr.StartDate
+}
+
+func (rr ReportRequester) GetEndDate() time.Time {
+	return rr.EndDate
+}
