@@ -7,7 +7,6 @@ import (
 	"github.com/econnelly/myrevenue/adnetwork"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/url"
 	"time"
 )
@@ -75,7 +74,6 @@ func (rr *ReportRequester) Fetch() ([]myrevenue.Model, error) {
 	resp, err := myrevenue.GetRequest(rr.reportURL, nil, false)
 
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -96,15 +94,14 @@ func (rr ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error)
 		return nil, e
 	}
 	rr.rawData = result
-	return rr.convertToReportModel(result), nil
+	return rr.convertToReportModel(result)
 }
 
 func (rr ReportRequester) Error(reader io.ReadCloser, err error) {
 	reader.Close()
-	log.Printf("%v: %v", rr.GetName(), err)
 }
 
-func (rr ReportRequester) convertToReportModel(result ReportResponse) []myrevenue.Model {
+func (rr ReportRequester) convertToReportModel(result ReportResponse) ([]myrevenue.Model, error) {
 	reports := make([]myrevenue.Model, len(result.Rows))
 	for i, row := range result.Rows {
 		reports[i].NetworkName = rr.GetName()
@@ -115,13 +112,13 @@ func (rr ReportRequester) convertToReportModel(result ReportResponse) []myrevenu
 
 		day, err := time.Parse("2006-01-02 15:04:05", row.DateTime)
 		if err != nil {
-			log.Println(err)
+			return nil, err
 		} else {
 			reports[i].DateTime = day
 		}
 	}
 
-	return reports
+	return reports, nil
 }
 
 func (ReportRequester) GetName() string {

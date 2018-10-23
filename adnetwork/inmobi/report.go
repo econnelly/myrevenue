@@ -95,7 +95,6 @@ func (rr *ReportRequester) startSession() (string, string, error) {
 
 	resp, err := client.Do(n)
 	if err != nil {
-		log.Printf("%v: %v", rr.GetName(), err)
 		return "", "", err
 	}
 
@@ -103,7 +102,6 @@ func (rr *ReportRequester) startSession() (string, string, error) {
 	defer resp.Body.Close()
 
 	if err != nil {
-		log.Printf("%v: %v", rr.GetName(), err)
 		return "", "", err
 	}
 
@@ -120,8 +118,6 @@ func (rr ReportRequester) createSessionModel(reader io.Reader) (Session, error) 
 
 	e = json.Unmarshal(body, &result)
 	if e != nil {
-		msg := fmt.Sprintf("%v: Could not create request\n%v", rr.GetName(), string(body))
-		log.Println(msg)
 		return result, e
 	}
 

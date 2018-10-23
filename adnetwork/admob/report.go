@@ -121,7 +121,6 @@ func (rr *ReportRequester) Fetch() ([]myrevenue.Model, error) {
 	resp, err := myrevenue.GetRequest(rr.reportURL, headers, false)
 
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -181,7 +180,7 @@ func (rr ReportRequester) convertToReportModel(r ReportResponse) ([]myrevenue.Mo
 
 		day, err := time.Parse("2006-01-02", r.StartDate)
 		if err != nil {
-			log.Println(err.Error())
+			return nil, err
 		} else {
 			reportModels[i].DateTime = day
 		}
@@ -213,19 +212,14 @@ func (rr ReportRequester) fetchAuthToken() string {
 
 	resp, err := client.Do(r)
 	if err != nil {
-		log.Println(err)
 		return ""
 	}
 
-	authModel, errorModel, err := rr.unmarshalAuth(resp.Body)
+	authModel, _, err := rr.unmarshalAuth(resp.Body)
 	defer resp.Body.Close()
 	if err != nil {
 		log.Println(err)
 		return ""
-	}
-
-	if authModel.AccessToken == "" {
-		log.Println(errorModel.ErrorDescription)
 	}
 
 	rr.RefreshToken = authModel.RefreshToken

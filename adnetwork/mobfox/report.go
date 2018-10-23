@@ -7,7 +7,6 @@ import (
 	"github.com/econnelly/myrevenue/adnetwork"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/url"
 	"time"
 )
@@ -64,7 +63,6 @@ func (rr *ReportRequester) Fetch() ([]myrevenue.Model, error) {
 	resp, err := myrevenue.GetRequest(rr.reportURL, nil, false)
 
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -100,7 +98,7 @@ func (rr ReportRequester) convertModel(m ReportResponse) ([]myrevenue.Model, err
 		reportModels[j].NetworkName = rr.GetName()
 		day, err := time.Parse("2006-01-02", r[headerMap["day"]].(string))
 		if err != nil {
-			log.Println(err)
+			return nil, err
 		} else {
 			reportModels[j].DateTime = day
 		}

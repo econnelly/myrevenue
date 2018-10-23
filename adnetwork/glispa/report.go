@@ -152,7 +152,6 @@ func (rr *ReportRequester) Fetch() ([]myrevenue.Model, error) {
 	resp, err := myrevenue.GetRequest(rr.reportURL, headers, false)
 
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -210,23 +209,13 @@ func (rr ReportRequester) fetchAccessToken() string {
 
 	resp, err := client.Do(n)
 	if err != nil {
-		log.Printf("%v: %v", rr.GetName(), err)
 		return ""
 	}
 
-	authModel, errorModel, err := rr.unmarshalAuth(resp.Body)
+	authModel, _, err := rr.unmarshalAuth(resp.Body)
 	defer resp.Body.Close()
 	if err != nil {
-		log.Printf("%v: %v", rr.GetName(), err)
 		return ""
-	}
-
-	if authModel.RefreshToken == "" {
-		if errorModel.Error != "" {
-			log.Println(errorModel)
-		} else {
-			log.Println("Error fetching refresh token")
-		}
 	}
 
 	rr.RefreshToken = authModel.RefreshToken
@@ -243,7 +232,6 @@ func (rr ReportRequester) unmarshalAuth(reader io.Reader) (AuthResponse, AuthErr
 
 	e = json.Unmarshal(body, &result)
 	if e != nil {
-		log.Println("Could not create Glispa request")
 		return result, AuthErrorResponse{}, e
 	}
 
@@ -265,12 +253,10 @@ func (rr ReportRequester) Error(reader io.ReadCloser, err error) {
 	body, err := ioutil.ReadAll(reader)
 	defer reader.Close()
 	if err != nil {
-		log.Printf("%v: %v", rr.GetName(), err)
 		return
 	}
 	e := json.Unmarshal(body, &errorResult)
 	if e == nil {
-		log.Printf("%v: %v", rr.GetName(), errorResult.ErrorDescription)
 		return
 	}
 }

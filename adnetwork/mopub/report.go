@@ -7,7 +7,6 @@ import (
 	"github.com/econnelly/myrevenue"
 	"github.com/econnelly/myrevenue/adnetwork"
 	"io"
-	"log"
 	"net/url"
 	"strconv"
 	"time"
@@ -53,7 +52,6 @@ func (rr ReportRequester) Fetch() ([]myrevenue.Model, error) {
 	resp, err := myrevenue.GetRequest(rr.reportURL, nil, false)
 
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -66,7 +64,6 @@ func (rr *ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error
 	records, err := content.ReadAll()
 
 	if err != nil {
-		log.Fatalln("Error parsing CSV", err)
 		return nil, err
 	}
 
@@ -99,7 +96,7 @@ func (rr ReportRequester) convertCSVToModel(csv [][]string) ([]myrevenue.Model, 
 
 			day, err := time.Parse("2006-01-02", csv[i][headerMap["Day"]])
 			if err != nil {
-				log.Println(err)
+				return nil, err
 			} else {
 				model.DateTime = day
 			}
@@ -108,7 +105,6 @@ func (rr ReportRequester) convertCSVToModel(csv [][]string) ([]myrevenue.Model, 
 			if len(ctrStr) > 0 {
 				ctr, err := strconv.ParseFloat(ctrStr, 32)
 				if err != nil {
-					log.Printf("%v: %v", rr.GetName(), err)
 					return nil, err
 				}
 				model.CTR = ctr
