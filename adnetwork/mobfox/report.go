@@ -109,6 +109,9 @@ func (rr ReportRequester) convertModel(m ReportResponse) ([]myrevenue.Model, err
 		imp := r[headerMap["total_impressions"]].(float64)
 		reportModels[j].CTR = clicks / imp
 		reportModels[j].ECPM = r[headerMap["ecpm"]].(float64)
+		if r[headerMap["country_code"]] != nil {
+			reportModels[j].Country = r[headerMap["country_code"]].(string)
+		}
 	}
 
 	return reportModels, nil
