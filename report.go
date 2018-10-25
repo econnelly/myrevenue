@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httputil"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -77,4 +78,52 @@ func request(req *http.Request, headers map[string]string, debug bool) (*http.Re
 
 func newClient() *http.Client {
 	return &http.Client{}
+}
+
+func DateRangeFromHistory(history string, tz string) (time.Time, time.Time, error) {
+	var startDate time.Time
+	var endDate time.Time
+
+	loc, e := time.LoadLocation(tz)
+	if e != nil {
+		log.Fatalln(e)
+	}
+
+	switch history {
+	case "yesterday":
+		tempDate := time.Now().In(loc).AddDate(0, 0, -1)
+		startDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 0, 0, 0, 0, loc)
+		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 999999999, loc)
+	case "today":
+		tempDate := time.Now().In(loc)
+		startDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 0, 0, 0, 0, loc)
+		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 999999999, loc)
+	case "week":
+		tempDate := time.Now().In(loc).AddDate(0, 0, -7)
+		startDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 0, 0, 0, 0, loc)
+
+		tempDate = time.Now().In(loc).AddDate(0, 0, -1)
+		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 999999999, loc)
+	case "month-to-date":
+		tempDate := time.Now().In(loc).AddDate(0, 0, -1)
+		startDate = time.Date(tempDate.Year(), tempDate.Month(), 1, 0, 0, 0, 0, loc)
+		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 999999999, loc)
+	default:
+		tempDate, err := time.Parse("2006-01-02", history)
+		if err == nil {
+			startDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 0, 0, 0, 0, loc)
+			endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 999999999, loc)
+		} else {
+			days, err := strconv.ParseInt(history, 10, 32)
+			if err != nil {
+				return time.Now(), time.Now(), err
+			}
+
+			tempDate := time.Now().In(loc).AddDate(0, 0, int(days*-1))
+			startDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 0, 0, 0, 0, loc)
+			endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 9999, loc)
+		}
+	}
+
+	return startDate, endDate, nil
 }
