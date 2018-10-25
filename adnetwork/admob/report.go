@@ -249,7 +249,7 @@ func (rr ReportRequester) unmarshalAuth(r io.ReadCloser) (TokenResponse, TokenEr
 }
 
 func (rr ReportRequester) GetName() string {
-	return "AdMob"
+	return "Admob"
 }
 
 func (rr ReportRequester) GetReport() interface{} {
