@@ -52,7 +52,7 @@ func (rr *ReportRequester) Initialize() error {
 	reportURL := url.URL{
 		Scheme: "https",
 		Host:   "api-metrics.flurry.com",
-		Path:   fmt.Sprintf("public/v1/data/publisherRecent/%v/app", "day"),
+		Path:   fmt.Sprintf("public/v1/data/publisherRecent/%v/app", "hour"),
 	}
 
 	if rr.TimeZone == "" {
