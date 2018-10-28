@@ -124,8 +124,8 @@ func (rr *ReportRequester) Initialize() error {
 		}
 	}
 
-	startDate := rr.StartDate.UTC().Format("2006-01-02 15:04:05.999999")
-	endDate := rr.EndDate.UTC().Format("2006-01-02 15:04:05.999999")
+	startDate := rr.StartDate.UTC().Format("2006-01-02 15:04:05.999999999")
+	endDate := rr.EndDate.UTC().Format("2006-01-02 15:04:05.999999999")
 
 	reportUrl := url.URL{
 		Scheme: "https",
