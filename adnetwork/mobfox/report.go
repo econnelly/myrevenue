@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"github.com/econnelly/myrevenue"
 	"github.com/econnelly/myrevenue/adnetwork"
+	"github.com/pkg/errors"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/url"
 	"time"
 )
@@ -36,8 +38,8 @@ func (rr *ReportRequester) Initialize() error {
 
 	requestUrl := url.URL{
 		Scheme: "https",
-		Host:   "api-v2.mobfox.com",
-		Path:   "publisher/report",
+		Host:   "api-v3.mobfox.com",
+		Path:   "publisher/report/dashboard",
 	}
 
 	// 2018-01-01 00:00:00
@@ -50,8 +52,8 @@ func (rr *ReportRequester) Initialize() error {
 	values.Set("to", endDate)
 	//values.Add("period", "yesterday")
 	values.Add("tz", rr.TimeZone)
-	values.Add("group", "sub_id,inventory_id,country_code")
-	values.Add("timegroup", "day")
+	values.Add("group", "ad_source,inventory_id,country_code")
+	values.Add("timegroup", "hour")
 	values.Add("totals", "total_impressions,total_served,total_requests,total_clicks,total_earnings,ecpm")
 
 	rr.reportURL = fmt.Sprintf("%v?%v", requestUrl.String(), values.Encode())
@@ -93,12 +95,13 @@ func (rr ReportRequester) convertModel(m ReportResponse) ([]myrevenue.Model, err
 		headerMap[v] = i
 	}
 
+	var totalRevenue float64
 	reportModels := make([]myrevenue.Model, m.Rowcount)
 	for j, r := range m.Results {
 		reportModels[j].NetworkName = rr.GetName()
-		day, err := time.Parse("2006-01-02", r[headerMap["day"]].(string))
+		day, err := time.Parse("2006-01-02 15:04", r[headerMap["hour"]].(string))
 		if err != nil {
-			return nil, err
+			return nil, errors.Errorf("%v: %v", rr.GetName(), err)
 		} else {
 			reportModels[j].DateTime = day
 		}
@@ -111,6 +114,11 @@ func (rr ReportRequester) convertModel(m ReportResponse) ([]myrevenue.Model, err
 		reportModels[j].ECPM = r[headerMap["ecpm"]].(float64)
 		if r[headerMap["country_code"]] != nil {
 			reportModels[j].Country = r[headerMap["country_code"]].(string)
+		}
+
+		totalRevenue += reportModels[j].Revenue
+		if j+1 == len(m.Results) {
+			log.Printf("Mobfox revenue: %v", totalRevenue)
 		}
 	}
 
