@@ -137,7 +137,7 @@ func (rr *ReportRequester) Initialize() error {
 	query.Set("access_token", accessToken)
 	query.Add("timestamp[from]", startDate)
 	query.Add("timestamp[to]", endDate)
-	query.Add("granularity", "day")
+	query.Add("granularity", "hour")
 
 	rr.reportURL = fmt.Sprintf("%v?%v", reportUrl.String(), query.Encode())
 
