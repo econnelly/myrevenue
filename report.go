@@ -93,26 +93,32 @@ func DateRangeFromHistory(history string, tz string) (time.Time, time.Time, erro
 	case "yesterday":
 		tempDate := time.Now().In(loc).AddDate(0, 0, -1)
 		startDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 0, 0, 0, 0, loc)
-		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 999999999, loc)
+		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 23, 59, 59, 999999999, loc)
 	case "today":
 		tempDate := time.Now().In(loc)
 		startDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 0, 0, 0, 0, loc)
-		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 999999999, loc)
+		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 23, 59, 59, 999999999, loc)
 	case "week":
 		tempDate := time.Now().In(loc).AddDate(0, 0, -7)
 		startDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 0, 0, 0, 0, loc)
 
 		tempDate = time.Now().In(loc).AddDate(0, 0, -1)
-		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 999999999, loc)
+		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 23, 59, 59, 999999999, loc)
 	case "month-to-date":
 		tempDate := time.Now().In(loc).AddDate(0, 0, -1)
 		startDate = time.Date(tempDate.Year(), tempDate.Month(), 1, 0, 0, 0, 0, loc)
-		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 999999999, loc)
+		endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 23, 59, 59, 999999999, loc)
+	case "last-month":
+		tempDate := time.Date(time.Now().In(loc).Year(), time.Now().In(loc).Month(), 1, 0, 0, 0, 0, loc)
+		startDate = tempDate.AddDate(0, -1, 0)
+
+		tempDate = time.Date(time.Now().In(loc).Year(), time.Now().In(loc).Month(), 1, 23, 59, 59, 999999999, loc)
+		endDate = tempDate.AddDate(0, 0, -1)
 	default:
 		tempDate, err := time.Parse("2006-01-02", history)
 		if err == nil {
 			startDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 0, 0, 0, 0, loc)
-			endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 999999999, loc)
+			endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 23, 59, 59, 999999999, loc)
 		} else {
 			days, err := strconv.ParseInt(history, 10, 32)
 			if err != nil {
@@ -121,7 +127,7 @@ func DateRangeFromHistory(history string, tz string) (time.Time, time.Time, erro
 
 			tempDate := time.Now().In(loc).AddDate(0, 0, int(days*-1))
 			startDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 0, 0, 0, 0, loc)
-			endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 11, 59, 59, 9999, loc)
+			endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 23, 59, 59, 9999, loc)
 		}
 	}
 
