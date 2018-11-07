@@ -8,7 +8,6 @@ import (
 	"github.com/pkg/errors"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/url"
 	"time"
 )
@@ -55,6 +54,7 @@ func (rr *ReportRequester) Initialize() error {
 	values.Add("group", "ad_source,inventory_id,country_code")
 	values.Add("timegroup", "hour")
 	values.Add("totals", "total_impressions,total_served,total_requests,total_clicks,total_earnings,ecpm")
+	values.Add("ad_source", "stack,exchange")
 
 	rr.reportURL = fmt.Sprintf("%v?%v", requestUrl.String(), values.Encode())
 
@@ -101,7 +101,10 @@ func (rr ReportRequester) convertModel(m ReportResponse) ([]myrevenue.Model, err
 		reportModels[j].NetworkName = rr.GetName()
 		day, err := time.Parse("2006-01-02 15:04", r[headerMap["hour"]].(string))
 		if err != nil {
-			return nil, errors.Errorf("%v: %v", rr.GetName(), err)
+			day, err = time.Parse("2006-01-02", r[headerMap["day"]].(string))
+			if err != nil {
+				return nil, errors.Errorf("%v: %v", rr.GetName(), err)
+			}
 		} else {
 			reportModels[j].DateTime = day
 		}
@@ -117,9 +120,6 @@ func (rr ReportRequester) convertModel(m ReportResponse) ([]myrevenue.Model, err
 		}
 
 		totalRevenue += reportModels[j].Revenue
-		if j+1 == len(m.Results) {
-			log.Printf("Mobfox revenue: %v", totalRevenue)
-		}
 	}
 
 	return reportModels, nil
