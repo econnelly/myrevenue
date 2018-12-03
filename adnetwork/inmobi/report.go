@@ -196,11 +196,16 @@ func (rr ReportRequester) convertToReportModel(response ReportResponse) ([]myrev
 		return nil, errors.New(responseError.Message)
 	}
 
+	loc, e := time.LoadLocation("Etc/UTC")
+	if e != nil {
+		return nil, e
+	}
+
 	for i, item := range response.RespList {
 		reportModels[i].Impressions = item.AdImpressions
 		reportModels[i].Revenue = item.Earnings
 		reportModels[i].Requests = item.AdRequests
-		day, parseError := time.Parse("2006-01-02 15:04:05", item.Date)
+		day, parseError := time.ParseInLocation("2006-01-02 15:04:05", item.Date, loc)
 		if parseError != nil {
 			return nil, parseError
 		}

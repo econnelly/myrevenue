@@ -285,7 +285,7 @@ func (rr ReportRequester) hasRefreshToken() bool {
 }
 
 func (rr ReportRequester) GetName() string {
-	return "Glispa (Avocarrot)"
+	return "Glispa"
 }
 
 func (rr ReportRequester) GetReport() interface{} {

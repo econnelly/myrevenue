@@ -178,7 +178,12 @@ func (rr ReportRequester) convertToReportModel(r ReportResponse) ([]myrevenue.Mo
 			reportModels[i].Clicks = clicks
 		}
 
-		day, err := time.Parse("2006-01-02", r.StartDate)
+		loc, e := time.LoadLocation("Etc/UTC")
+		if e != nil {
+			return nil, e
+		}
+
+		day, err := time.ParseInLocation("2006-01-02", r.StartDate, loc)
 		if err != nil {
 			return nil, err
 		} else {

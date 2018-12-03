@@ -97,11 +97,15 @@ func (rr ReportRequester) convertModel(m ReportResponse) ([]myrevenue.Model, err
 
 	var totalRevenue float64
 	reportModels := make([]myrevenue.Model, m.Rowcount)
+	loc, e := time.LoadLocation(rr.TimeZone)
+	if e != nil {
+		return nil, errors.Errorf("Could not load timezone (%s)", rr.TimeZone)
+	}
 	for j, r := range m.Results {
 		reportModels[j].NetworkName = rr.GetName()
-		day, err := time.Parse("2006-01-02 15:04", r[headerMap["hour"]].(string))
+		day, err := time.ParseInLocation("2006-01-02 15:04", r[headerMap["hour"]].(string), loc)
 		if err != nil {
-			day, err = time.Parse("2006-01-02", r[headerMap["day"]].(string))
+			day, err = time.ParseInLocation("2006-01-02", r[headerMap["day"]].(string), loc)
 			if err != nil {
 				return nil, errors.Errorf("%v: %v", rr.GetName(), err)
 			}

@@ -110,7 +110,12 @@ func (rr ReportRequester) convertToReportModel(result ReportResponse) ([]myreven
 		reports[i].Requests = uint64(row.AdsRequested)
 		reports[i].CTR = row.Ctr
 
-		day, err := time.Parse("2006-01-02 15:04:05.000-07:00", row.DateTime)
+		loc, e := time.LoadLocation(rr.TimeZone)
+		if e != nil {
+			return nil, e
+		}
+
+		day, err := time.ParseInLocation("2006-01-02 15:04:05.000-07:00", row.DateTime, loc)
 		if err != nil {
 			return nil, err
 		} else {

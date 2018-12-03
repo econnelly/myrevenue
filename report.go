@@ -115,14 +115,14 @@ func DateRangeFromHistory(history string, tz string) (time.Time, time.Time, erro
 		tempDate = time.Date(time.Now().In(loc).Year(), time.Now().In(loc).Month(), 1, 23, 59, 59, 999999999, loc)
 		endDate = tempDate.AddDate(0, 0, -1)
 	default:
-		tempDate, err := time.Parse("2006-01-02", history)
+		tempDate, err := time.ParseInLocation("2006-01-02", history, loc)
 		if err == nil {
 			startDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 0, 0, 0, 0, loc)
 			endDate = time.Date(tempDate.Year(), tempDate.Month(), tempDate.Day(), 23, 59, 59, 999999999, loc)
 		} else {
 			days, err := strconv.ParseInt(history, 10, 32)
 			if err != nil {
-				return time.Now(), time.Now(), err
+				return time.Now().UTC(), time.Now().UTC(), err
 			}
 
 			tempDate := time.Now().In(loc).AddDate(0, 0, int(days*-1))

@@ -83,6 +83,11 @@ func (rr ReportRequester) convertCSVToModel(csv [][]string) ([]myrevenue.Model, 
 	}
 	reportModels := make([]myrevenue.Model, csvLength)
 
+	loc, e := time.LoadLocation("Etc/UTC")
+	if e != nil {
+		return nil, e
+	}
+
 	for i := range csv {
 		if i == 0 {
 			for k, h := range csv[i] {
@@ -94,7 +99,7 @@ func (rr ReportRequester) convertCSVToModel(csv [][]string) ([]myrevenue.Model, 
 
 			model.Country = csv[i][headerMap["Country"]]
 
-			day, err := time.Parse("2006-01-02", csv[i][headerMap["Day"]])
+			day, err := time.ParseInLocation("2006-01-02", csv[i][headerMap["Day"]], loc)
 			if err != nil {
 				return nil, err
 			} else {
