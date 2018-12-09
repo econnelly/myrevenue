@@ -15,10 +15,10 @@ import (
 )
 
 type ReportRequester struct {
-	SessionID string
-	AccountID string
-	Username  string
-	SecretKey string
+	SessionID string `json:"session_id"`
+	AccountID string `json:"account_id"`
+	Username  string `json:"username"`
+	SecretKey string `json:"secret_key"`
 	StartDate time.Time
 	EndDate   time.Time
 

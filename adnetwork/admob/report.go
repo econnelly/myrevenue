@@ -17,10 +17,10 @@ import (
 )
 
 type ReportRequester struct {
-	PublisherID  string
-	ClientID     string
-	ClientSecret string
-	RefreshToken string
+	PublisherID  string `json:"publisher_id"`
+	ClientID     string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
+	RefreshToken string `json:"refresh_token"`
 	StartDate    time.Time
 	EndDate      time.Time
 	adnetwork.Request

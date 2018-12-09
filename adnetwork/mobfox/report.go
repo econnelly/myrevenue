@@ -13,8 +13,8 @@ import (
 )
 
 type ReportRequester struct {
-	APIKey    string
-	TimeZone  string
+	APIKey    string `json:"api_key"`
+	TimeZone  string `json:"time_zone"`
 	StartDate time.Time
 	EndDate   time.Time
 	adnetwork.Request

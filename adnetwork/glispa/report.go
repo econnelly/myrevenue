@@ -16,13 +16,13 @@ import (
 )
 
 type ReportRequester struct {
-	PublisherKey string
-	ClientID     string
-	ClientSecret string
-	RefreshToken string // This should be fetched and stored when the user connect their Glispa account to the system
+	PublisherKey string `json:"publisher_key"`
+	ClientID     string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
+	RefreshToken string `json:"refresh_token"` // This should be fetched and stored when the user connect their Glispa account to the system
 	// Once that is done, this field will no longer need to be public
-	Username  string
-	Password  string
+	Username  string `json:"username"`
+	Password  string `json:"password"`
 	StartDate time.Time
 	EndDate   time.Time
 
