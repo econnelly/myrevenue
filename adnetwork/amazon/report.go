@@ -101,10 +101,6 @@ func stringArrayToModel(headers map[string]int, revenues []string) (myrevenue.Mo
 		return revenue, err
 	}
 
-	/*
-		Date	Title	Size	Region	Device	Requests	Impressions	Fill Rate %	Clicks	CTR %	eCPM (USD)	Ad Earnings (USD)
-	*/
-
 	day, err := time.ParseInLocation("2006-01-02", revenues[headers["Date"]], loc)
 	revenue.DateTime = day
 	revenue.Country = revenues[headers["Region"]]
