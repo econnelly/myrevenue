@@ -91,8 +91,6 @@ func (r ReportParser) ParseRevenue(reader io.Reader) ([]myrevenue.Model, error) 
 func stringArrayToModel(headers map[string]int, revenues []string) (myrevenue.Model, error) {
 	revenue := myrevenue.Model{}
 	if len(headers) != len(revenues) {
-		log.Println(headers)
-		log.Println(revenues)
 		return revenue, errors.New("header size must match revenues size")
 	}
 
@@ -101,7 +99,7 @@ func stringArrayToModel(headers map[string]int, revenues []string) (myrevenue.Mo
 		return revenue, err
 	}
 
-	day, err := time.ParseInLocation("2006-01-02", revenues[headers["Date"]], loc)
+	day, err := time.ParseInLocation("01/02/2006", revenues[headers["Date"]], loc)
 	revenue.DateTime = day
 	revenue.Country = revenues[headers["Region"]]
 
