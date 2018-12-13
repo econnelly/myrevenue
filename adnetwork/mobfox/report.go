@@ -52,7 +52,7 @@ func (rr *ReportRequester) Initialize() error {
 	//values.Add("period", "yesterday")
 	values.Add("tz", rr.TimeZone)
 	values.Add("group", "ad_source,inventory_id,country_code")
-	values.Add("timegroup", "hour")
+	values.Add("timegroup", "day")
 	values.Add("totals", "total_impressions,total_served,total_requests,total_clicks,total_earnings,ecpm")
 	values.Add("ad_source", "stack,exchange")
 
@@ -103,15 +103,12 @@ func (rr ReportRequester) convertModel(m ReportResponse) ([]myrevenue.Model, err
 	}
 	for j, r := range m.Results {
 		reportModels[j].NetworkName = rr.GetName()
-		day, err := time.ParseInLocation("2006-01-02 15:04", r[headerMap["hour"]].(string), loc)
+		day, err := time.ParseInLocation("2006-01-02", r[headerMap["day"]].(string), loc)
 		if err != nil {
-			day, err = time.ParseInLocation("2006-01-02", r[headerMap["day"]].(string), loc)
-			if err != nil {
-				return nil, errors.Errorf("%v: %v", rr.GetName(), err)
-			}
-		} else {
-			reportModels[j].DateTime = day
+			return nil, errors.Errorf("%v: %v", rr.GetName(), err)
 		}
+
+		reportModels[j].DateTime = day
 		reportModels[j].Impressions = uint64(r[headerMap["total_impressions"]].(float64))
 		reportModels[j].Revenue = r[headerMap["total_earnings"]].(float64)
 		reportModels[j].Requests = uint64(r[headerMap["total_requests"]].(float64))

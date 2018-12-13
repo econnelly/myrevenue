@@ -74,12 +74,11 @@ type GenericErrorResponse struct {
 }
 
 const (
-	EARNINGS            = "EARNINGS"
-	IMPRESSIONS         = "IMPRESSIONS"
-	AD_REQUESTS         = "AD_REQUESTS"
-	AD_REQUESTS_CTR     = "AD_REQUESTS_CTR"
-	CLICKS              = "CLICKS"
-	MATCHED_AD_REQUESTS = "MATCHED_AD_REQUESTS"
+	EARNINGS     = "EARNINGS"
+	IMPRESSIONS  = "IMPRESSIONS"
+	AD_REQUESTS  = "AD_REQUESTS"
+	CLICKS       = "CLICKS"
+	COUNTRY_CODE = "COUNTRY_CODE"
 )
 
 func (rr *ReportRequester) Initialize() error {
@@ -101,12 +100,11 @@ func (rr *ReportRequester) Initialize() error {
 	query := url.Values{}
 	query.Set("startDate", startDate)
 	query.Add("endDate", endDate)
+	query.Add("dimension", COUNTRY_CODE)
 	query.Add("metric", EARNINGS)
 	query.Add("metric", IMPRESSIONS)
 	query.Add("metric", AD_REQUESTS)
-	query.Add("metric", AD_REQUESTS_CTR)
 	query.Add("metric", CLICKS)
-	query.Add("metric", MATCHED_AD_REQUESTS)
 
 	rr.reportURL = fmt.Sprintf("%v?%v", requestUrl.String(), query.Encode())
 
@@ -118,6 +116,7 @@ func (rr *ReportRequester) Fetch() ([]myrevenue.Model, error) {
 		"Accept":        "application/json; charset=utf-8",
 		"Authorization": fmt.Sprintf("Bearer %v", rr.authToken),
 	}
+
 	resp, err := myrevenue.GetRequest(rr.reportURL, headers, false)
 
 	if err != nil {
@@ -168,14 +167,15 @@ func (rr ReportRequester) convertToReportModel(r ReportResponse) ([]myrevenue.Mo
 			reportModels[i].Requests = requests
 		}
 
-		ctr, err := strconv.ParseFloat(result[headers[AD_REQUESTS_CTR]], 64)
-		if err == nil {
-			reportModels[i].CTR = ctr
-		}
-
 		clicks, err := strconv.ParseUint(result[headers[CLICKS]], 10, 64)
 		if err == nil {
 			reportModels[i].Clicks = clicks
+		}
+
+		index, found := headers[COUNTRY_CODE]
+		if found {
+			country := result[index]
+			reportModels[i].Country = country
 		}
 
 		loc, e := time.LoadLocation("Etc/UTC")

@@ -67,8 +67,6 @@ func (rr *ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error
 		return nil, err
 	}
 
-	defer reader.Close()
-
 	rr.rawData = ReportResponse{
 		Data: records,
 	}
@@ -77,8 +75,10 @@ func (rr *ReportRequester) parse(reader io.ReadCloser) ([]myrevenue.Model, error
 
 func (rr ReportRequester) convertCSVToModel(csv [][]string) ([]myrevenue.Model, error) {
 	headerMap := make(map[string]int)
-	csvLength := len(csv) - 1
-	if csvLength == 0 {
+	csvLength := len(csv)
+	if csvLength == 1 {
+		return nil, errors.New(csv[0][0])
+	} else if csvLength == 0 {
 		return nil, errors.New("0-length csv")
 	}
 	reportModels := make([]myrevenue.Model, csvLength)
